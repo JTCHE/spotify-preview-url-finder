@@ -23,6 +23,7 @@ jobs:
           bun-version: latest # You can also use a specific version
       - run: bun install # Only needed if you have any dependencies
       - run: bun app/index/page.tsx # Change to your entrypoint!
+      - run: bun run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -32,10 +33,7 @@ jobs:
           #
           # You may remove this line if you want to manage the configuration yourself.
           static_site_generator: next
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./out
+        
   deploy:
     environment:
       name: github-pages
