@@ -1,4 +1,4 @@
-# Readme
+# About
 A very simple NextJS app that fetches the 30s song preview URL by using a Spotify track ID.
 
 The main logic can be found in the **fetch-spotify-preview-url.tsx**
