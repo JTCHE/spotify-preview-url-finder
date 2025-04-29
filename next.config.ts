@@ -12,16 +12,4 @@ const millionConfig = {
   auto: true, // if you're using RSC: auto: { rsc: true },
 };
 
-// module.exports = {
-//   async redirects() {
-//     return [
-//       {
-//         source: "/",
-//         destination: "/index",
-//         permanent: true,
-//       },
-//     ];
-//   },
-// };
-
 export default million.next(nextConfig, millionConfig);
