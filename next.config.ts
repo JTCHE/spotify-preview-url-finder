@@ -1,7 +1,26 @@
-import type { NextConfig } from "next";
+import million from "million/compiler";
 
-const nextConfig: NextConfig = {
-  /* config options here */
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  turbopack: {},
+  appDir: true,
 };
 
-export default nextConfig;
+const millionConfig = {
+  auto: true, // if you're using RSC: auto: { rsc: true },
+};
+
+module.exports = {
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/index",
+        permanent: true,
+      },
+    ];
+  },
+};
+
+export default million.next(nextConfig, millionConfig);
