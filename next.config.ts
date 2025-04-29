@@ -5,6 +5,7 @@ const nextConfig = {
   reactStrictMode: true,
   turbopack: {},
   appDir: true,
+  output: 'export',
 };
 
 const millionConfig = {
