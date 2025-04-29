@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # Execute on manual trigger
 
 jobs:
-  build-and-start:
+  build:
     runs-on: ubuntu-latest # Linux base image
     steps:
       - uses: actions/checkout@v3 # Checkout repo
