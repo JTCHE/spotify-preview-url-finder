@@ -13,10 +13,10 @@ jobs:
       - uses: actions/checkout@v3 # Checkout repo
       - uses: oven-sh/setup-bun@v1 # Setup bun
         with:
-            bun-version: latest # You can also use a specific version
+          bun-version: latest # You can also use a specific version
       - run: bun install # Only needed if you have any dependencies
       - run: bun app/index/page.tsx # Change to your entrypoint!
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
         with:
@@ -25,7 +25,7 @@ jobs:
           #
           # You may remove this line if you want to manage the configuration yourself.
           static_site_generator: next
-    deploy:
+  deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
