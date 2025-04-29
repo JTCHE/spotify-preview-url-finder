@@ -11,6 +11,26 @@ interface PreviewResult {
   coverUrl?: string;
 }
 
+// Define the expected response type from fetchPreviewUrl
+interface SuccessResponse {
+  success: true;
+  results: {
+    name: string;
+    previewUrl: string;
+    coverUrl: string;
+    // Add other possible properties if needed
+    spotifyUrl?: any;
+    duration?: any;
+  };
+}
+
+interface ErrorResponse {
+  success: false;
+  error: string;
+}
+
+type FetchPreviewResponse = SuccessResponse | ErrorResponse;
+
 export default function Home() {
   const [result, setResult] = useState<PreviewResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -19,7 +39,7 @@ export default function Home() {
     setLoading(true);
     try {
       // Call server action to fetch the preview URL
-      const response = await fetchPreviewUrl(url);
+      const response = (await fetchPreviewUrl(url)) as FetchPreviewResponse;
 
       if (response.success) {
         setResult({
