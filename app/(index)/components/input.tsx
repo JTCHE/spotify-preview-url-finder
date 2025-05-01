@@ -5,13 +5,13 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "@/shadcn/co
 import { Input } from "@/shadcn/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shadcn/components/ui/select";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 // Defining the expected props
 interface SpotifyInputProps {
-  onSubmit: (url: string) => void;
+  onSubmit: (value: string) => void;
   loading: boolean;
 }
 
@@ -30,36 +30,62 @@ const searchTypes = {
   },
 };
 
-// Defining the form's schema
-const formSchema = z.object({
-  searchType: z.string(),
-  url: z.string().url().includes("spotify.com/track", {
-    message: "Invalid Spotify URL. Please enter a valid Spotify track URL.",
+// Create a discriminated union schema
+const formSchema = z.discriminatedUnion("searchType", [
+  // URL schema
+  z.object({
+    searchType: z.literal("URL"),
+    value: z.string().url().includes("spotify.com/track", {
+      message: "Invalid Spotify URL. Please enter a valid Spotify track URL.",
+    }),
   }),
-});
+
+  // ID schema
+  z.object({
+    searchType: z.literal("ID"),
+    value: z.string().min(20, {
+      message: "Invalid Spotify ID. Please enter a valid Spotify track ID.",
+    }),
+  }),
+
+  // Song name schema
+  z.object({
+    searchType: z.literal("songName"),
+    value: z.string().min(2, {
+      message: "Song name must be at least 2 characters.",
+    }),
+  }),
+]);
+
+type FormValues = z.infer<typeof formSchema>;
 
 // Main component
 export default function SpotifyInput({ loading, onSubmit }: SpotifyInputProps) {
-  // A. Defining the form
-  const form = useForm<z.infer<typeof formSchema>>({
+  // Defining the form
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      searchType: Object.keys(searchTypes)[0],
-      url: "",
+      searchType: "URL",
+      value: "",
     },
   });
 
-  // B. Defining a submit handler
-  function handleSubmit({ url }: { url: string }) {
-    console.log(url);
-    if (url.includes("spotify.com/track/")) {
-      onSubmit(url);
-    } else {
-      alert("Invalid Spotify URL. Please enter a valid Spotify track URL.");
-    }
-  }
+  // Reset validation when search type changes
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === "searchType") {
+        form.resetField("value", { keepError: false });
+      }
+    });
 
-  const [isReady, setIsReady] = useState(false); //State to know whether the form can be submitted or not, depending on the search type
+    return () => subscription.unsubscribe();
+  }, [form]);
+
+  // Submit handler - process based on type
+  function handleSubmit(data: FormValues) {
+    onSubmit(data.value);
+    // alert(`You submitted a Spotify ${data.searchType} that says : ${data.value}`);
+  }
 
   return (
     <Form {...form}>
@@ -83,22 +109,27 @@ export default function SpotifyInput({ loading, onSubmit }: SpotifyInputProps) {
                 </FormControl>
                 <SelectContent>
                   {Object.entries(searchTypes).map(([key, value]) => (
-                    <SelectItem value={key}>{value.name}</SelectItem>
+                    <SelectItem
+                      key={key}
+                      value={key}
+                    >
+                      {value.name}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </FormItem>
           )}
-        ></FormField> */}
+        /> */}
+
         <FormField
           control={form.control}
-          name="url"
+          name="value"
           render={({ field }) => (
             <FormItem>
               <FormControl>
                 <Input
                   {...field}
-                  // onChange={() => watchForm(form.watch("url"))}
                   placeholder={searchTypes[form.watch("searchType") as keyof typeof searchTypes].exampleString}
                 />
               </FormControl>
@@ -106,6 +137,7 @@ export default function SpotifyInput({ loading, onSubmit }: SpotifyInputProps) {
             </FormItem>
           )}
         />
+
         <Button
           type="submit"
           className="w-full"
