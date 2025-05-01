@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import Footer from "./components/footer";
 import SpotifyInput from "./components/input";
 import { fetchPreviewUrl } from "./utilities/fetching/actions";
-import { Button } from "@/shadcn/components/ui/button";
 
 interface PreviewResult {
   name?: string;
@@ -60,11 +60,14 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8 gap-8">
-      <section className="max-w-sm space-y-4">
+    <main className="flex min-h-screen flex-col items-center justify-center p-8 gap-8 max-w-sm mx-auto">
+      <section className="space-y-4">
         <h1 className="text-2xl font-bold">Spotify Song Preview URL Finder</h1>
 
-        <SpotifyInput onSubmit={handleSubmit} loading={loading} />
+        <SpotifyInput
+          onSubmit={handleSubmit}
+          loading={loading}
+        />
 
         {loading && <p>Loading preview URL...</p>}
 
@@ -80,7 +83,11 @@ export default function Home() {
                   </div>
                 )}
 
-                <audio controls src={result.previewUrl} className="w-full">
+                <audio
+                  controls
+                  src={result.previewUrl}
+                  className="w-full"
+                >
                   Your browser does not support the audio element.
                 </audio>
 
@@ -93,7 +100,11 @@ export default function Home() {
                   <div className="space-y-4">
                     <div className="p-4 bg-gray-100 rounded break-all">
                       <h2 className="font-bold">Preview URL:</h2>
-                      <a target="_blank" className="underline text-blue-500" href={result.previewUrl}>
+                      <a
+                        target="_blank"
+                        className="underline text-blue-500"
+                        href={result.previewUrl}
+                      >
                         {result.previewUrl}
                       </a>
                     </div>
@@ -106,15 +117,8 @@ export default function Home() {
           </div>
         )}
       </section>
-      
-      <footer>
-        <p className="text-muted-foreground pointer-events-none">
-          Made with ✿ by{" "}
-          <a href="johnchedeville.com" className="pointer-events-auto hover:text-primary transition">
-            John C.
-          </a>
-        </p>
-      </footer>
+
+      <Footer />
     </main>
   );
 }
