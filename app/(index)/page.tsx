@@ -106,14 +106,15 @@ export default function Home() {
           </div>
         )}
       </section>
-      <section>
+      
+      <footer>
         <p className="text-muted-foreground pointer-events-none">
-          Made with ֍ by{" "}
+          Made with ✿ by{" "}
           <a href="johnchedeville.com" className="pointer-events-auto hover:text-primary transition">
             John C.
           </a>
         </p>
-      </section>
+      </footer>
     </main>
   );
 }
