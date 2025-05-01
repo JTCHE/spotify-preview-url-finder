@@ -61,7 +61,7 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-8 gap-8">
-      <section className="max-w-sm space-y-8">
+      <section className="max-w-sm space-y-4">
         <h1 className="text-2xl font-bold">Spotify Song Preview URL Finder</h1>
 
         <SpotifyInput onSubmit={handleSubmit} loading={loading} />
