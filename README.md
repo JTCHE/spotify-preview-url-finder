@@ -5,6 +5,7 @@ The main logic can be found in the **fetch-spotify-preview-url.tsx**
 
 # Roadmap
 * Allow more types of searches (by song name, ID, URL)
+* Store the state as a URL param
 * Use flexbox to fix gap issues on various browsers
 * Skeleton loaders
 * Allow batch searches and saving results as CSV
