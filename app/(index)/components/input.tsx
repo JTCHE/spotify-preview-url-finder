@@ -1,43 +1,66 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
+import { Button } from "@/shadcn/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/shadcn/components/ui/form";
+import { Input } from "@/shadcn/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+// Defining the expected props
 interface SpotifyInputProps {
   onSubmit: (url: string) => void;
   loading: boolean;
 }
 
-export default function SpotifyInput({ onSubmit, loading }: SpotifyInputProps) {
-  const [url, setUrl] = useState('');
+// Defining the form's schema
+const formSchema = z.object({
+  url: z.string().url().includes("spotify.com/track", {
+    message: "Invalid Spotify URL. Please enter a valid Spotify track URL.",
+  }),
+});
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (url.includes('spotify.com/track/')) {
+// Main component
+export default function SpotifyInput({ loading, onSubmit }: SpotifyInputProps) {
+  // A. Defining the form
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      url: "",
+    },
+  });
+
+  // B. Defining a submit handler
+  function handleSubmit({ url }: { url: string }) {
+    console.log(url);
+    if (url.includes("spotify.com/track/")) {
       onSubmit(url);
     } else {
-      alert('Invalid Spotify URL. Please enter a valid Spotify track URL.');
+      alert("Invalid Spotify URL. Please enter a valid Spotify track URL.");
     }
-  };
+  }
 
   return (
     <div className="w-full">
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-        <input
-          type="text"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter Spotify track URL"
-          className="p-2 border border-gray-300 rounded"
-          disabled={loading}
-        />
-        <button
-          type="submit"
-          disabled={loading || !url}
-          className="p-2 bg-green-500 text-white rounded disabled:bg-gray-300"
-        >
-          {loading ? 'Loading...' : 'Get Preview URL'}
-        </button>
-      </form>
+      <Form {...form}>
+        <form className="space-y-4" onSubmit={form.handleSubmit(handleSubmit)}>
+          <FormField
+            control={form.control}
+            name="url"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input {...field} placeholder="https://spotify.com/track/7eqoqGkKwgOaWNNHx90uEZ" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button disabled={!form.watch("url").includes('spotify.com/track') || loading} type="submit" className="w-full">
+            {loading ? "Loading…" : "Submit"}
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }

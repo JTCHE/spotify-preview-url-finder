@@ -3,6 +3,7 @@
 import { useState } from "react";
 import SpotifyInput from "./components/input";
 import { fetchPreviewUrl } from "./utilities/fetching/actions";
+import { Button } from "@/shadcn/components/ui/button";
 
 interface PreviewResult {
   name?: string;
@@ -18,7 +19,6 @@ interface SuccessResponse {
     name: string;
     previewUrl: string;
     coverUrl: string;
-    // Add other possible properties if needed
     spotifyUrl?: any;
     duration?: any;
   };
@@ -60,7 +60,7 @@ export default function Home() {
   };
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
+    <main className="flex min-h-screen flex-col items-center justify-center p-8 gap-8">
       <section className="max-w-sm space-y-8">
         <h1 className="text-2xl font-bold">Spotify Preview URL Finder</h1>
 
@@ -105,6 +105,14 @@ export default function Home() {
             )}
           </div>
         )}
+      </section>
+      <section>
+        <p className="text-muted-foreground pointer-events-none">
+          Made with ֍ by{" "}
+          <a href="johnchedeville.com" className="pointer-events-auto hover:text-primary transition">
+            John C.
+          </a>
+        </p>
       </section>
     </main>
   );
